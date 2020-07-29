@@ -129,7 +129,7 @@ project = {'jobs':[
                 'blocking':True, 
                 'jobs':[ # these two jobs will be run first
                     {'func':simpleTask,'args': 1},
-                    {'func':addSubJob,'args': 2} # This job adds a sub job with child jobs
+                    {'func':addSubJob,'args': 2} # This job adds a new job with child jobs
                     # {'jobs': New child jobs are placed here}
                     ], 
             },
