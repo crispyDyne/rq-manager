@@ -154,12 +154,12 @@ Start Redis Server
 redis-server
 ```
 
-Clear Redis Cashe (optional)
-```
-redis-cli FLUSHALL
-```
-
 Run supervisor
 ```
 supervisord
+```
+
+Clear Jobs / Clear Redis Cache (optional)
+```
+redis-cli FLUSHALL
 ```
