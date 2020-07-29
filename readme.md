@@ -1,11 +1,14 @@
 
 ## rq-manager
-Manage jobs with multiple or tree-like dependancy.
+Manage rq jobs with multiple or tree-like dependancy.
 
 Create a "project", which is a tree of jobs, then give it to the "manager" to complete it!
 
+```python
+q = Queue() 
 managerJob = q.enque(manager,project)
 projectResults = getProjectResults(managerJob)
+```
 
 ## A few examples
 Define a simple job:
@@ -22,6 +25,11 @@ project = {'jobs':[
             {'func':simpleTask,'args': 2}]
             }
 ```
+returns
+```python
+[2, 4]
+
+```
 
 ### Run jobs in series:
 If a job is marked as blocking, the following jobs will wait to run.
@@ -31,15 +39,25 @@ project = {'jobs':[
             {'func':simpleTask,'args': 2}]
             }
 ```
+returns
+```python
+[2, 4]
+
+```
 
 ### Run with dependent arguments:
 A job can use the the results of a previous job as its inputs. It will wait for the previous job to finish, but it will not block later jobs.
 ```Python
 project = {'jobs':[
             {'func':simpleTask,'args': 1},
-            {'func':simpleTask, 'previousJobArgs': True}, # this job will wait to start until the previous job is finished
+            {'func':simpleTask, 'previousJobArgs': True}, # this job will wait
             {'func':simpleTask,'args': 3}] # this job will NOT wait
             }
+```
+returns
+```python
+[2, 4, 6]
+
 ```
 
 ### Run jobs with multiple dependancy:
@@ -47,14 +65,20 @@ A job can have child jobs. The parent job is not finised until all of the child 
 ```Python
 project = {'jobs':[
             {
-                'blocking':True # this job, and its child jobs, must finish before moving on.
+                'blocking':True, # this job, and its child jobs, must finished before moving on.
                 'jobs':[ 
-                    {'func':simpleJob,'args': 1},
-                    {'func':simpleJob,'args': 2}],
+                    {'func':simpleTask,'args': 1},
+                    {'func':simpleTask,'args': 2}],
             },
             { # this job will only run when the blocking job above finishes.
-                'func':simpleJob,'args': 2}]
+                'func':simpleTask,'args': 3
             }
+        ]}
+```
+returns
+```python
+[[2, 4], 6]
+
 ```
 
 ### Add jobs as you go
@@ -72,14 +96,19 @@ Jobs will be appended to the current job array
 project = {'jobs':[
             {
                 'blocking':True, 
-                'jobs':[ # these two jobs will run first
-                    {'func':simpleTask,'args': 2},
-                    {'func':addJobs,'args': 4} # This job adds new jobs
+                'jobs':[ # these two jobs will be run first
+                    {'func':simpleTask,'args': 1},
+                    {'func':addJobs,'args': 2} # This job adds new jobs
                     # New Jobs are placed here
                     ], 
             },
-            {'func':simpleTask,'args': 2}]
+            {'func':simpleTask,'args': 3}]
         }
+```
+returns
+```python
+[[2, 4, 8, 10], 6]
+
 ```
 
 ### Add job with child jobs as you go
@@ -93,19 +122,24 @@ def addSubJob(n):
     newSubJob = {'jobs':newJobArray }
     return {'result':2*n, 'addJobs':newSubJob}
 ```
-A new sub job with subjobs will 
+A sub job will be added with child jobs.
 ```Python
 project = {'jobs':[
             {
                 'blocking':True, 
                 'jobs':[ # these two jobs will be run first
-                    {'func':simpleTask,'args': 2},
-                    {'func':addSubJob,'args': 4} # This job adds a new job with child jobs
-                    # {'jobs': New Jobs are placed here}
+                    {'func':simpleTask,'args': 1},
+                    {'func':addSubJob,'args': 2} # This job adds a sub job with child jobs
+                    # {'jobs': New child jobs are placed here}
                     ], 
             },
             {'func':simpleTask,'args': 2}]
         }
+```
+returns
+```python
+[[2, 4, [8, 10]], 6]
+
 ```
 
 ## Redis Help
