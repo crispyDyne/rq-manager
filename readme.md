@@ -1,8 +1,14 @@
 
-## rq-manager
 Manage rq jobs with multiple or tree-like dependancy.
 
-Create a "project", which is a tree of jobs, then give it to the "manager" to complete it!
+Create a "project" dictionary that contains an array of jobs.
+```python
+project = {'jobs':[
+            {'func':simpleTask,'args': 1},
+            {'func':simpleTask,'args': 2}]
+            }
+```
+Then give it to the "manager" to complete it!
 
 ```python
 q = Queue() 
