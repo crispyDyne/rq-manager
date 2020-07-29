@@ -114,6 +114,8 @@ def getJobResults(job):
 
 
 def getProjectResults(managerJob):
+    # Get results of the project. 
+    # This function is blocking, and only returns when the project is complete
     project = None
     finished = False
     while not finished:

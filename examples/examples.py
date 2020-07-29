@@ -3,12 +3,10 @@ from redis import Redis
 
 from rq_manager import manager, getProjectResults
 from exampleTasks import addSubJob, simpleTask, addJobs, addSubJob
-
-import json
 from pprint import pprint
 
-def jsonCopy(d):
-    return json.loads(json.dumps(d))
+
+#### Examples are slow because "sleepTime" default is 1 second  ####
 
 # Tell RQ what Redis connection to use
 redis_conn = Redis()
@@ -69,7 +67,7 @@ project = {'jobs':[
                 'jobs':[ # these two jobs will be run first
                     {'func':simpleTask,'args': 1},
                     {'func':addJobs,'args': 2} # This job adds new jobs
-                    # New Jobs are placed here
+                    # New jobs are placed here
                     ], 
             },
             {'func':simpleTask,'args': 3}]
@@ -86,7 +84,7 @@ project = {'jobs':[
                 'jobs':[ # these two jobs will be run first
                     {'func':simpleTask,'args': 1},
                     {'func':addSubJob,'args': 2} # This job adds a new job with child jobs
-                    # {'jobs': New Jobs are placed here}
+                    # {'jobs': New child jobs are placed here}
                     ], 
             },
             {'func':simpleTask,'args': 2}]
