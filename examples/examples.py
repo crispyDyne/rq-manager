@@ -2,15 +2,13 @@ from rq import Queue
 from redis import Redis
 
 from rq_manager import manager, getProjectResults
-from exampleTasks import addSubJob, simpleTask, addJobs, addSubJob
-from pprint import pprint
 
+from exampleTasks import addSubJob, simpleTask, addJobs, addSubJob
 
 #### Examples are slow because "sleepTime" default is 1 second  ####
 
 # Tell RQ what Redis connection to use
-redis_conn = Redis()
-q = Queue(connection=redis_conn,is_async=True)  # no args implies the default queue
+q = Queue(connection=Redis())
 
 ### Run jobs in parallel:
 project = {'jobs':[
@@ -20,7 +18,7 @@ project = {'jobs':[
 
 managerJob = q.enqueue(manager,project)
 projectResults = getProjectResults(managerJob)
-pprint(projectResults)
+print(projectResults)
 
 ### Run jobs in series:
 project = {'jobs':[
@@ -30,7 +28,7 @@ project = {'jobs':[
 
 managerJob = q.enqueue(manager,project)
 projectResults = getProjectResults(managerJob)
-pprint(projectResults)
+print(projectResults)
 
 ### Run with dependent arguments:
 project = {'jobs':[
@@ -41,7 +39,7 @@ project = {'jobs':[
 
 managerJob = q.enqueue(manager,project)
 projectResults = getProjectResults(managerJob)
-pprint(projectResults)
+print(projectResults)
 
 ### Run jobs with multiple dependancy:
 project = {'jobs':[
@@ -58,7 +56,7 @@ project = {'jobs':[
 
 managerJob = q.enqueue(manager,project)
 projectResults = getProjectResults(managerJob)
-pprint(projectResults)
+print(projectResults)
 
 ### Add jobs as you go
 project = {'jobs':[
@@ -75,7 +73,7 @@ project = {'jobs':[
 
 managerJob = q.enqueue(manager,project)
 projectResults = getProjectResults(managerJob)
-pprint(projectResults)
+print(projectResults)
 
 ### Add a job with child jobs as you go
 project = {'jobs':[
@@ -92,4 +90,4 @@ project = {'jobs':[
 
 managerJob = q.enqueue(manager,project)
 projectResults = getProjectResults(managerJob)
-pprint(projectResults)
+print(projectResults)
