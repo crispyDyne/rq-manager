@@ -2,7 +2,7 @@
 from rq import Queue
 from redis import Redis
 
-from manager import manager, waitForProjectResults
+from rq_manager import manager, getProjectResults
 import tasks
 
 import json
@@ -62,6 +62,6 @@ project = {
 
 managerJob = q.enqueue(manager,project)
 
-projectResults = waitForProjectResults(managerJob)
+projectResults = getProjectResults(managerJob)
 pprint(projectResults[-1])
 

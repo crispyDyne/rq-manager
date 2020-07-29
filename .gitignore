@@ -1,8 +1,7 @@
 .vscode
-
-super_logs.conf
-supervisord.log
-supervisord.pid
+*.log
+*.pid
+*.rdb
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

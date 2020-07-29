@@ -1,6 +1,6 @@
 import collections
 import time 
-# from pprint import pprint
+from pprint import pprint
 
 from rq import Queue
 from redis import Redis
@@ -22,8 +22,8 @@ def manager(project):
     else:
         # Assign defaults if not set.
         if 'loop' not in project: project['loop'] = 0
-        if 'maxLoop' not in project: project['maxLoop'] = 100
-        if 'sleepTime' not in project: project['sleepTime'] = 0.5
+        if 'maxLoop' not in project: project['maxLoop'] = 600
+        if 'sleepTime' not in project: project['sleepTime'] = 1
 
         if (project['loop'] < project['maxLoop']):
             project['loop'] += 1 # keep track of the number of loops 
@@ -60,11 +60,16 @@ def runJobs(jobs):
                         args = getJobResults(previousJob)
                     else: 
                         finished = False
-                        continue 
-                else: # or simply use the provided arguments
-                    args = jsonCopy(job['args'])
+                        continue
 
-                job_temp = q.enqueue(job['func'],args) # queue the job.
+                else: # or simply use the provided 
+                    args = job['args']
+
+                if not isinstance(args,tuple):
+                    args = (args,)
+
+                kwargs = job.get('kwargs',{})
+                job_temp = q.enqueue(job['func'],args=args,kwargs=kwargs) # queue the job.
                 job['id'] = job_temp.id # store the job id so we can keep track of its progress. 
 
                 finished = False  # The jobs are not finished, we just started a job!
@@ -97,7 +102,7 @@ def runJobs(jobs):
     return finished
 
 def getJobResults(job): 
-    # Get results of a job. If a job has subjobs, then an array of results will be returned.
+    # Get results of a job. If a job has child jobs, then an array of the child results will be returned.
     if 'func' in job:
         results = job['result']
     else:
@@ -107,7 +112,8 @@ def getJobResults(job):
 
     return results
 
-def waitForProjectResults(managerJob):
+
+def getProjectResults(managerJob):
     project = None
     finished = False
     while not finished:

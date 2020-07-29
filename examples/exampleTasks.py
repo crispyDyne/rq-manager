@@ -1,5 +1,3 @@
-
-
 def simpleTask(x):
     return 2*x
 
@@ -7,7 +5,7 @@ def simpleTask(x):
 def addJobs(x):
     newJobs = []
     for i in range(x):
-        newJobs.append({'func':simpleTask,'args': i})
+        newJobs.append({'func':simpleTask,'args': (2*x + i)})
 
     return {'result':2*x, 'addJobs':newJobs}
 
@@ -15,6 +13,6 @@ def addJobs(x):
 def addSubJob(x):
     newJobs = []
     for i in range(x):
-        newJobs.append({'func':simpleTask,'args': i})
+        newJobs.append({'func':simpleTask,'args': (2*x + i)})
 
     return {'result':2*x, 'addJobs':{'jobs':newJobs }}

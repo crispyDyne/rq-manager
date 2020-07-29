@@ -4,16 +4,17 @@ Manage jobs with multiple or tree-like dependancy.
 
 Create a "project", which is a tree of jobs, then give it to the "manager" to complete it!
 
-managedProject = q.enque(manager,project)
+managerJob = q.enque(manager,project)
+projectResults = getProjectResults(managerJob)
 
-## A few trivial examples.
+## A few examples
 Define a simple job:
 ```python
 def simpleJob(x):
     return 2*x
 ```
 
-### Run jobs in parallel
+### Run jobs in parallel:
 Jobs in an array will be started immediately and run in parallel.
 ```Python
 project = {'jobs':[
@@ -46,7 +47,7 @@ A job can have child jobs. The parent job is not finised until all of the child 
 ```Python
 project = {'jobs':[
             {
-                'blocking':True # this job, and its child jobs, must finished before moving on.
+                'blocking':True # this job, and its child jobs, must finish before moving on.
                 'jobs':[ 
                     {'func':simpleJob,'args': 1},
                     {'func':simpleJob,'args': 2}],
@@ -71,7 +72,7 @@ Jobs will be appended to the current job array
 project = {'jobs':[
             {
                 'blocking':True, 
-                'jobs':[ # these two jobs will be run first
+                'jobs':[ # these two jobs will run first
                     {'func':simpleTask,'args': 2},
                     {'func':addJobs,'args': 4} # This job adds new jobs
                     # New Jobs are placed here
@@ -81,8 +82,8 @@ project = {'jobs':[
         }
 ```
 
-### Add sub jobs as you go
-Define a job that creates new subjob filled with jobs.
+### Add job with child jobs as you go
+Define a job that creates new a job filled with child jobs.
 ```Python
 def addSubJob(n):
     newJobArray = []
@@ -99,7 +100,7 @@ project = {'jobs':[
                 'blocking':True, 
                 'jobs':[ # these two jobs will be run first
                     {'func':simpleTask,'args': 2},
-                    {'func':addSubJob,'args': 4} # This job adds a new job with subjobs
+                    {'func':addSubJob,'args': 4} # This job adds a new job with child jobs
                     # {'jobs': New Jobs are placed here}
                     ], 
             },
