@@ -3,6 +3,9 @@ Manage rq jobs with multiple or tree-like dependancy.
 
 Create a "project" dictionary that contains an array of jobs.
 ```python
+def simpleTask(x):
+    return 2*x
+    
 project = {'jobs':[
             {'func':simpleTask,'args': 1},
             {'func':simpleTask,'args': 2}]
@@ -17,11 +20,6 @@ projectResults = getProjectResults(managerJob)
 ```
 
 ## A few examples
-Define a simple job:
-```python
-def simpleJob(x):
-    return 2*x
-```
 
 ### Run jobs in parallel:
 Jobs in an array will be started immediately and run in parallel.
